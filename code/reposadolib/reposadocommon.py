@@ -523,39 +523,41 @@ def check_or_remove_config_data_attribute(
     config_data_products = set()
     for key in product_list:
         if key in products:
-            if products[key].get('CatalogEntry'):
-                distributions = products[key]['CatalogEntry'].get(
-                    'Distributions', {})
-                for lang in distributions.keys():
-                    distPath = getLocalPathNameFromURL(
-                        products[key]['CatalogEntry']['Distributions'][lang])
-                    if not os.path.exists(distPath):
-                        continue
-                    dom = readXMLfile(distPath)
-                    if dom:
-                        found_config_data = False
-                        option_elements = (
-                            dom.getElementsByTagName('options') or [])
-                        for element in option_elements:
-                            if 'type' in element.attributes.keys():
-                                if (element.attributes['type'].value
-                                        == 'config-data'):
-                                    found_config_data = True
-                                    config_data_products.add(key)
-                                    if remove_attr:
-                                        element.removeAttribute('type')
-                        # done editing dom
-                        if found_config_data and remove_attr:
-                            try:
-                                writeXMLtoFile(dom, distPath)
-                            except (OSError, IOError):
-                                pass
-                            else:
+        	if products[key].get('config-data'):
+        		config_data_products.add(key)
+                if products[key].get('CatalogEntry'):
+                    distributions = products[key]['CatalogEntry'].get(
+                        'Distributions', {})
+                    for lang in distributions.keys():
+                        distPath = getLocalPathNameFromURL(
+                            products[key]['CatalogEntry']['Distributions'][lang])
+                        if not os.path.exists(distPath):
+                            continue
+                        dom = readXMLfile(distPath)
+                        if dom:
+                            found_config_data = False
+                            option_elements = (
+                                dom.getElementsByTagName('options') or [])
+                            for element in option_elements:
+                                if 'type' in element.attributes.keys():
+                                    if (element.attributes['type'].value
+                                            == 'config-data'):
+                                        found_config_data = True
+                                        config_data_products.add(key)
+                                        if remove_attr:
+                                            element.removeAttribute('type')
+                            # done editing dom
+                            if found_config_data and remove_attr:
+                                try:
+                                    writeXMLtoFile(dom, distPath)
+                                except (OSError, IOError):
+                                    pass
+                                else:
+                                    if not suppress_output:
+                                        print_stdout('Updated dist: %s', distPath)
+                            elif not found_config_data:
                                 if not suppress_output:
-                                    print_stdout('Updated dist: %s', distPath)
-                        elif not found_config_data:
-                            if not suppress_output:
-                                print_stdout('No config-data in %s', distPath)
+                                    print_stdout('No config-data in %s', distPath)
     return list(config_data_products)
 
 LOGFILE = None

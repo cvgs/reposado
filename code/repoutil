@@ -287,7 +287,8 @@ def list_deprecated(sort_order='date', reverse_sort=False):
 def list_config_data(sort_order='date', reverse_sort=False):
     '''Find updates with \'type="config-data"\' attribute'''
     product_info = reposadocommon.getProductInfo()
-    product_list = product_info.keys()
+    product_list = [key for key in products.keys()
+                          if products[key].get('config-data')]
     matching_products = reposadocommon.check_or_remove_config_data_attribute(
         product_list, remove_attr=False, products=product_info,
         suppress_output=True)

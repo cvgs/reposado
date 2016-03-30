@@ -231,6 +231,15 @@ def parseSUdist(filename, debug=False):
                 if debug:
                     print 'CDATA dict: %s' % cdata
 
+    # look for options type="config-data"
+    option_config_data = False
+    option_tags = dom.getElementsByTagName('options') or []
+    for option_tag in option_tags:
+        keys = option_tag.attributes.keys()
+        if 'type' in keys:
+            if option_tag.attributes['type'].value == 'config-data':
+                option_config_data = True
+
     # assemble!
     dist = {}
     dist['su_name'] = su_choice.get('suDisabledGroupID', '')
@@ -242,6 +251,8 @@ def parseSUdist(filename, debug=False):
             # get value from cdata dictionary
             dist[key] = cdata.get(dist[key], dist[key])
     dist['pkg_refs'] = pkgs
+    dist['config-data'] = option_config_data
+
 
     return dist
 
@@ -738,6 +749,7 @@ def sync(fast_scan=False, download_packages=True):
                         product['PostDate']
                     products[product_key]['pkg_refs'] = \
                         dist['pkg_refs']
+                    products[product_key]['config-data'] = dist['config-data']
 
                     # if we got this far, we've replicated the product data
                     replicated_products.append(product_key)
