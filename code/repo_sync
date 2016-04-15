@@ -488,7 +488,6 @@ class ReplicationError(Exception):
     '''A custom error when replication fails'''
     pass
 
-
 def replicateURLtoFilesystem(full_url, root_dir=None,
                              base_url=None, copy_only_if_missing=False,
                              appendToFilename=''):
@@ -511,6 +510,7 @@ def replicateURLtoFilesystem(full_url, root_dir=None,
     local_file_path = os.path.join(root_dir, relative_url) + appendToFilename
     local_dir_path = os.path.dirname(local_file_path)
     if copy_only_if_missing and os.path.exists(local_file_path):
+        reposadocommon.createCompressedFileCopy(local_file_path, True)
         return local_file_path
     if not os.path.exists(local_dir_path):
         try:
@@ -521,6 +521,7 @@ def replicateURLtoFilesystem(full_url, root_dir=None,
         getURL(full_url, local_file_path)
     except CurlDownloadError, err:
         raise ReplicationError(err)
+    reposadocommon.createCompressedFileCopy(local_file_path)
     return local_file_path
 
 

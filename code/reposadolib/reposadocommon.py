@@ -258,6 +258,12 @@ def getDataFromPlist(filename):
     except (IOError, ExpatError):
         return {}
 
+def createCompressedFileCopy(local_file_path, copy_only_if_missing=False):
+    '''creates a gzipped copy of the given file at the same location with .gz suffix'''
+    local_gz_file_path = local_file_path + '.gz'
+    if not ( copy_only_if_missing and os.path.exists(local_gz_file_path)):
+	    with open(local_file_path) as f_in, gzip.open(local_gz_file_path, 'wb') as f_out:
+   		    f_out.writelines(f_in)
 
 def getDownloadStatus():
     '''Reads download status info from disk'''
@@ -431,8 +437,7 @@ def writeBranchCatalogs(localcatalogpath):
                         product_key, branch, localcatalogname)
 
         plistlib.writePlist(catalog, branchcatalogpath)
-        with open(branchcatalogpath) as f_in, gzip.open(branchcatalogpath + '.gz', 'wb') as f_out:
-            f_out.writelines(f_in)
+        createCompressedFileCopy(branchcatalogpath)
 
 def writeAllLocalCatalogs():
     '''Writes out all local and branch catalogs. Used when we purge products.'''
@@ -474,8 +479,7 @@ def writeLocalCatalogs(applecatalogpath):
     # write raw (unstable/development) catalog
     # with all downloaded Apple updates enabled
     plistlib.writePlist(catalog, localcatalogpath)
-    with open(localcatalogpath) as f_in, gzip.open(localcatalogpath + '.gz', 'wb') as f_out:
-        f_out.writelines(f_in)
+    createCompressedFileCopy(localcatalogpath)
 
     # now write filtered catalogs (branches) based on this catalog
     writeBranchCatalogs(localcatalogpath)
