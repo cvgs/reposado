@@ -46,6 +46,7 @@ import plistlib
 import time
 import urlparse
 import warnings
+import gzip
 from xml.parsers.expat import ExpatError
 from xml.dom import minidom
 
@@ -430,7 +431,8 @@ def writeBranchCatalogs(localcatalogpath):
                         product_key, branch, localcatalogname)
 
         plistlib.writePlist(catalog, branchcatalogpath)
-
+        with open(branchcatalogpath) as f_in, gzip.open(branchcatalogpath + '.gz', 'wb') as f_out:
+            f_out.writelines(f_in)
 
 def writeAllLocalCatalogs():
     '''Writes out all local and branch catalogs. Used when we purge products.'''
@@ -472,6 +474,8 @@ def writeLocalCatalogs(applecatalogpath):
     # write raw (unstable/development) catalog
     # with all downloaded Apple updates enabled
     plistlib.writePlist(catalog, localcatalogpath)
+    with open(localcatalogpath) as f_in, gzip.open(localcatalogpath + '.gz', 'wb') as f_out:
+        f_out.writelines(f_in)
 
     # now write filtered catalogs (branches) based on this catalog
     writeBranchCatalogs(localcatalogpath)

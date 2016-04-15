@@ -20,6 +20,8 @@ Here is an example .htaccess file you could place at the root of your Reposado r
 	RewriteEngine On
 	Options FollowSymLinks
 	RewriteBase  /
+	RewriteCond %{HTTP:Accept-Encoding} gzip
+	RewriteRule ^(.+\.(sucatalog))$ /$1.gz [L]
 	RewriteCond %{HTTP_USER_AGENT} Darwin/8
 	RewriteRule ^index(.*)\.sucatalog$ content/catalogs/index$1.sucatalog [L]
 	RewriteCond %{HTTP_USER_AGENT} Darwin/9
