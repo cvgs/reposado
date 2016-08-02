@@ -89,7 +89,10 @@ def pref(prefname):
              '.sucatalog'),
             ('https://swscan.apple.com/content/catalogs/others/'
              'index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard'
-             '.merged-1.sucatalog')
+             '.merged-1.sucatalog'),
+            ('https://swscan.apple.com/content/catalogs/others/'
+             'index-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-'
+             'leopard.merged-1.sucatalog')
         ],
         'PreferredLocalizations': ['English', 'en'],
         'CurlPath': '/usr/bin/curl'
@@ -229,6 +232,20 @@ def print_stderr(msg, *args):
         log(output)
     else:
         print >> sys.stderr, concat_message(msg, *args)
+
+
+def humanReadable(size_in_bytes):
+    """Returns sizes in human-readable units."""
+    try:
+        size_in_bytes = int(size_in_bytes)
+    except ValueError:
+        size_in_bytes = 0
+    units = [(" KB", 10**6), (" MB", 10**9), (" GB", 10**12), (" TB", 10**15)]
+    for suffix, limit in units:
+        if size_in_bytes > limit:
+            continue
+        else:
+            return str(round(size_in_bytes/float(limit/2**10), 1)) + suffix
 
 
 def writeDataToPlist(data, filename):
