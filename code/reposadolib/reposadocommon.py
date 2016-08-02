@@ -262,7 +262,7 @@ def createCompressedFileCopy(local_file_path, copy_only_if_missing=False):
     '''creates a gzipped copy of the given file at the same location with .gz suffix'''
     local_gz_file_path = local_file_path + '.gz'
     if not ( copy_only_if_missing and os.path.exists(local_gz_file_path)):
-	    with open(local_file_path) as f_in, gzip.open(local_gz_file_path, 'wb') as f_out:
+	    with open(local_file_path) as f_in, gzip.open(local_gz_file_path, 'w') as f_out:
    		    f_out.writelines(f_in)
 
 def getDownloadStatus():

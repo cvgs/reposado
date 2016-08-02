@@ -17,28 +17,28 @@ If you are using Apache2 as your webserver, you may be able to configure mod_rew
 
 Here is an example .htaccess file you could place at the root of your Reposado repo:
 
-	RewriteEngine On
-	Options FollowSymLinks
-	RewriteBase  /
-    RewriteCond %{HTTP:Accept-Encoding} gzip
-    RewriteRule ^(.+\.(sucatalog|dist))$ /$1.gz [L]
-	RewriteCond %{HTTP_USER_AGENT} Darwin/8
-	RewriteRule ^index(.*)\.sucatalog$ content/catalogs/index$1.sucatalog [L]
-	RewriteCond %{HTTP_USER_AGENT} Darwin/9
-	RewriteRule ^index(.*)\.sucatalog$ content/catalogs/others/index-leopard.merged-1$1.sucatalog [L]
-	RewriteCond %{HTTP_USER_AGENT} Darwin/10
-	RewriteRule ^index(.*)\.sucatalog$ content/catalogs/others/index-leopard-snowleopard.merged-1$1.sucatalog [L]
-	RewriteCond %{HTTP_USER_AGENT} Darwin/11
-	RewriteRule ^index(.*)\.sucatalog$ content/catalogs/others/index-lion-snowleopard-leopard.merged-1$1.sucatalog [L]
-	RewriteCond %{HTTP_USER_AGENT} Darwin/12
-	RewriteRule ^index(.*)\.sucatalog$ content/catalogs/others/index-mountainlion-lion-snowleopard-leopard.merged-1$1.sucatalog [L]
-	RewriteCond %{HTTP_USER_AGENT} Darwin/13
-	RewriteRule ^index(.*)\.sucatalog$ content/catalogs/others/index-10.9-mountainlion-lion-snowleopard-leopard.merged-1$1.sucatalog [L]
-	RewriteCond %{HTTP_USER_AGENT} Darwin/14
-	RewriteRule ^index(.*)\.sucatalog$ content/catalogs/others/index-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1$1.sucatalog [L]
-	RewriteCond %{HTTP_USER_AGENT} Darwin/15
-	RewriteRule ^index(.*)\.sucatalog$ content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1$1.sucatalog [L]
-
+		Options FollowSymLinks
+		RewriteEngine On
+		RewriteBase /
+		RewriteCond %{HTTP_USER_AGENT} Darwin/15
+		RewriteRule ^/index(.*)\.sucatalog(\.gz)?$ /content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1$1.sucatalog$2 [S=7]
+		RewriteCond %{HTTP_USER_AGENT} Darwin/14
+		RewriteRule ^/index(.*)\.sucatalog(\.gz)?$ /content/catalogs/others/index-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1$1.sucatalog$2 [S=6]
+		RewriteCond %{HTTP_USER_AGENT} Darwin/13
+		RewriteRule ^/index(.*)\.sucatalog(\.gz)?$ /content/catalogs/others/index-10.9-mountainlion-lion-snowleopard-leopard.merged-1$1.sucatalog$2 [S=5]
+		RewriteCond %{HTTP_USER_AGENT} Darwin/12
+		RewriteRule ^/index(.*)\.sucatalog(\.gz)?$ /content/catalogs/others/index-mountainlion-lion-snowleopard-leopard.merged-1$1.sucatalog$2 [S=4]
+		RewriteCond %{HTTP_USER_AGENT} Darwin/11
+		RewriteRule ^/index(.*)\.sucatalog(\.gz)?$ /content/catalogs/others/index-lion-snowleopard-leopard.merged-1$1.sucatalog$2 [S=3]
+		RewriteCond %{HTTP_USER_AGENT} Darwin/10
+		RewriteRule ^/index(.*)\.sucatalog(\.gz)?$ /content/catalogs/others/index-leopard-snowleopard.merged-1$1.sucatalog$2 [S=2]
+		RewriteCond %{HTTP_USER_AGENT} Darwin/9
+		RewriteRule ^/index(.*)\.sucatalog(\.gz)?$ /content/catalogs/others/index-leopard.merged-1$1.sucatalog$2 [S=1]
+		RewriteCond %{HTTP_USER_AGENT} Darwin/8
+		RewriteRule ^/index(.*)\.sucatalog(\.gz)?$ /content/catalogs/index$1.sucatalog
+		RewriteCond %{HTTP:Accept-Encoding} gzip
+		RewriteRule ^(.+\.(sucatalog|dist))$ $1.gz
+ 
 
 This requires Apache2 to be configured to actually pay attention to mod_rewrite rules in .htaccess files. See your Apache and mod_rewrite documentation for details.
 
