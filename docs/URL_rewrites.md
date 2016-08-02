@@ -17,9 +17,13 @@ If you are using Apache2 as your webserver, you may be able to configure mod_rew
 
 Here is an example .htaccess file you could place at the root of your Reposado repo:
 
+        AddEncoding x-gzip .gz
+        AddType text/plain .gz
 		Options FollowSymLinks
 		RewriteEngine On
 		RewriteBase /
+		RewriteCond %{HTTP_USER_AGENT} Darwin/16
+		RewriteRule ^/index(.*)\.sucatalog(\.gz)?$ /content/catalogs/others/index-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1$1.sucatalog$2 [S=8]
 		RewriteCond %{HTTP_USER_AGENT} Darwin/15
 		RewriteRule ^/index(.*)\.sucatalog(\.gz)?$ /content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1$1.sucatalog$2 [S=7]
 		RewriteCond %{HTTP_USER_AGENT} Darwin/14
