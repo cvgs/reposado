@@ -275,12 +275,24 @@ def getDataFromPlist(filename):
     except (IOError, ExpatError):
         return {}
 
+
 def createCompressedFileCopy(local_file_path, copy_only_if_missing=False):
-    '''creates a gzipped copy of the given file at the same location with .gz suffix'''
+    '''Creates a gzipped copy of the given file at the same location with .gz suffix'''
     local_gz_file_path = local_file_path + '.gz'
-    if not ( copy_only_if_missing and os.path.exists(local_gz_file_path)):
-	    with open(local_file_path) as f_in, gzip.open(local_gz_file_path, 'w') as f_out:
-   		    f_out.writelines(f_in)
+    if not (copy_only_if_missing and os.path.exists(local_gz_file_path)):
+        try:
+            f_in = open(local_file_path, 'rb')
+        except (OSError, IOError), err:
+            print_stderr('Error: could not open file at %s: %s' % (local_file_path, err))
+        try:
+            f_out = gzip.open(local_gz_file_path, 'wb')
+            f_out.writelines(f_in)
+            f_out.close()
+        except (OSError, IOError), err:
+            print_stderr('Error: could not create compressed file at %s: %s' % (local_gz_file_path, err))
+        finally:
+            f_in.close()
+
 
 def getDownloadStatus():
     '''Reads download status info from disk'''
